@@ -1,0 +1,9 @@
+{
+    "compilerOptions": {
+        "lib": ["dom", "es2017"],
+        "target": "esnext",
+        "rootDir": "./ts",
+        "outDir": "./js",
+        "watch": true
+    }
+}

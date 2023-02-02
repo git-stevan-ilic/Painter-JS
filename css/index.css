@@ -1,0 +1,9 @@
+canvas{
+    backface-visibility:hidden;
+    image-rendering:pixelated;
+    transform-origin:0px 0px;
+    transform:scale(1);
+    position:absolute;
+    left:0px;
+    top:0px;
+}
