@@ -1,9 +1,12 @@
 window.onload = () => {
     let bCanvas = document.querySelector("#brush");
     let canvas = document.querySelector("#test");
+    let root = document.querySelector(":root");
+    let canvasH = parseInt(getComputedStyle(root).getPropertyValue("--project-height"));
+    let canvasW = parseInt(getComputedStyle(root).getPropertyValue("--project-width"));
     let ctx = canvas.getContext("2d", { willReadFrequently: true });
-    canvas.height = window.innerHeight - 70;
-    canvas.width = window.innerWidth - 12;
+    canvas.height = canvasH;
+    canvas.width = canvasW;
     let eraser = document.querySelector(".eraser");
     eraser.dataset.active = "false";
     eraser.onclick = () => {
@@ -22,7 +25,7 @@ window.onload = () => {
     colorSelect.onchange = updateBrush;
     brushSize.oninput = updateBrush;
     colorSelect.value = "#000000";
-    brushSize.value = "25";
+    brushSize.value = "1";
     updateBrush();
     canvas.onmousedown = (e) => {
         let eraser = document.querySelector(".eraser");
@@ -50,17 +53,34 @@ window.onload = () => {
         canvas.onmousemove = null;
     };
 };
+window.onwheel = (e) => {
+    let root = document.querySelector(":root");
+    let zoom = JSON.parse(getComputedStyle(root).getPropertyValue("--project-zoom"));
+    if (e.deltaY > 0) {
+        zoom--;
+        if (zoom < 1)
+            zoom = 1;
+    }
+    else {
+        zoom++;
+        if (zoom > 50)
+            zoom = 50;
+    }
+    console.clear();
+    console.log("Current Zoom: ", zoom);
+    document.documentElement.style.setProperty("--project-zoom", zoom);
+};
 function updateBrush() {
     let colorSelect = document.querySelector("#color-select");
     let brushSize = document.querySelector("#brush-size");
     let bCanvas = document.querySelector("#brush");
     let ctxb = bCanvas.getContext("2d", { willReadFrequently: true });
     let radius = parseInt(brushSize.value);
-    bCanvas.height = radius * 2;
-    bCanvas.width = radius * 2;
+    bCanvas.height = radius;
+    bCanvas.width = radius;
     ctxb.beginPath();
     ctxb.fillStyle = colorSelect.value;
-    ctxb.arc(radius, radius, radius, 0, 2 * Math.PI);
+    ctxb.arc(radius / 2, radius / 2, radius / 2, 0, 2 * Math.PI);
     ctxb.fill();
     ctxb.closePath();
     let imgData = ctxb.getImageData(0, 0, bCanvas.width, bCanvas.height);
